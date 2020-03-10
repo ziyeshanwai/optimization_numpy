@@ -8,8 +8,7 @@ from scipy.optimize import least_squares
 
 def func_res(x, L, b):
     X = x.reshape(-1, 3)
-    loss = np.sqrt(np.sum(np.square(L.dot(X)-b), axis=0)).mean()#.flatten()
-    print(loss)
+    loss = np.sqrt(np.sum(np.square(L.dot(X)-b), axis=0)).mean()
     return loss
 
 
@@ -19,13 +18,13 @@ if __name__ == "__main__":
     polymesh.loadObjFile(file_name)
     v, f = loadObj(file_name)
     L = load_pickle_file(r"./data/L.pkl")
-    L = L.todense()
+    # L = L.todense()
     delta = load_pickle_file(r"./data/delta.pkl")
     start = time.time()
     x = polymesh.VPos
-    res = scipy.optimize.minimize(func_res, x0=x.reshape(-1), args=(L, delta), method='CG', jac=False,
-                                  options={"gtol": 1e-7, "maxiter": 200, "disp":True, "eps": 1e-3})
-    # res = least_squares(func_res, x0=x.reshape(-1), args=(L, delta), method='trf')
+    # res = scipy.optimize.minimize(func_res, x0=x.reshape(-1), args=(L, delta), method='CG', jac=False,
+    #                               options={"gtol": 1e-7, "maxiter": 200, "disp":True, "eps": 1e-3})
+    res = least_squares(func_res, x0=x.reshape(-1), args=(L, delta), method='trf')
     print(res.success)
     print(res.x)
     print(res.cost)
